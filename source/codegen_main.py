@@ -10,8 +10,8 @@ if __name__== "__main__":
 
 	print ("Trying to parse XML input file now...")
 	
-	p = codegen_python_generator.GeneratorClass_StaticHeader('qbo_client_py')
-	p.dump_self('../output/auto_generated.py')
-	
 	codegen_xml_reader.readAssets()
-	codegen_xml_reader.readBlocks()
+	listBlocks = codegen_xml_reader.readBlocks()
+	
+	p = codegen_python_generator.GeneratorClass_StaticContent('qbo_client_py', listBlocks)
+	p.dump_self('../output/auto_generated.py')

@@ -29,10 +29,11 @@ class CodeGeneratorBackend:
 #--------------------------------------------
 # Class to hold infos that should get created
 #--------------------------------------------
-class GeneratorClass_StaticHeader():
+class GeneratorClass_StaticContent():
 
-	def __init__(self, clientString):
+	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
+		self.listBlocks = listBlocks
 
 	def dump_self(self, filename):
 		
@@ -46,7 +47,9 @@ class GeneratorClass_StaticHeader():
 		self.c.write('import rxt_skills_qbo.msg # Brings in the messages used by the qbo actions\n\n')	
 		
 		# function: send_ROSActionRequest_WithGoal
+		self.c.write('#--------------------------------------------------------------------------------------\n')
 		self.c.write('# client request helper function\n')
+		self.c.write('#--------------------------------------------------------------------------------------\n')
 		self.c.write('def send_ROSActionRequest_WithGoal(skillName, skillMsgType, skillGoal):\n\n')
 		self.c.indent()
 		self.c.write('rospy.init_node('+ self.clientString +') # Initializes a rospy node so that the SimpleActionClient can publish and subscribe over ROS\n\n')
@@ -58,14 +61,20 @@ class GeneratorClass_StaticHeader():
 		self.c.dedent()	
 		
 		# function: main open
+		self.c.write('#--------------------------------------------------------------------------------------\n')
 		self.c.write('# main function\n')
+		self.c.write('#--------------------------------------------------------------------------------------\n')
 		self.c.write('if __name__ == \'__main__\':\n')
 		self.c.indent()
 		self.c.write('try:\n')
 		
-		# TODO: create blocks!!!
+		# create all blocks read from XML
 		self.c.indent()
-		#TODO: generated blocks should go here!!!
+		for block in self.listBlocks:
+			self.c.write(block.blockName + '\n')
+			self.c.write(block.blockSlotName + '\n')
+			self.c.write(block.blockSlotValue + '\n')
+			self.c.write('\n\n')
 		self.c.dedent()			
 		
 		# function: main close
@@ -78,5 +87,8 @@ class GeneratorClass_StaticHeader():
 		f = open(filename,'w')
 		f.write(self.c.end())
 		f.close()
-    
-  
+
+
+
+
+	
