@@ -29,7 +29,7 @@ class CodeGeneratorBackend:
 #--------------------------------------------
 # Class to hold infos that should get created
 #--------------------------------------------
-class GeneratorClass_StaticContent():
+class PythonGeneratorClass():
 
 	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
@@ -73,8 +73,7 @@ class GeneratorClass_StaticContent():
 		for block in self.listBlocks:
 			self.c.write(block.blockName + '\n')
 			self.c.write(block.blockSlotName + '\n')
-			self.c.write(block.blockSlotValue + '\n')
-			self.c.write('\n\n')
+			self.c.write(block.blockSlotValue + '\n\n')
 		self.c.dedent()			
 		
 		# function: main close

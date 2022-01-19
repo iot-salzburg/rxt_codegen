@@ -15,55 +15,52 @@ class SimpleBlockEntry():
 		self.blockSlotValue = blockSlotValue
 
 #--------------------------------------------
-# fkt readAssets
+# Class to parse XML File from Blockly
 #--------------------------------------------
-def readAssets():
-	
-	print ("-----------------------------------------------------")
-	print ("Searching for all involved assets...")
-	print ("-----------------------------------------------------")
-	for asset in root:
-		print ("Found involved Asset with following tag and attrib: ")
-		print (asset.tag, asset.attrib)
+class XML_BlocklyProject_Parser():
 
-#--------------------------------------------
-# fkt readBlocks
-#--------------------------------------------
-def readBlocks():
+	# read the assets involved in the script
+	def readAssets(self):
 
-	listBlocks = [] 
-		
-	print ("-----------------------------------------------------")
-	print ("Parsing XML Tree searching for blocks...")
-	print ("-----------------------------------------------------")
-	for all_elements in tree.iter():
-		
+		print ("-----------------------------------------------------")
+		print ("Searching for all involved assets...")
+		print ("-----------------------------------------------------")
+		for asset in root:
+			print ("Found involved Asset with following tag and attrib: ")
+			print (asset.tag, asset.attrib)
+
+	# read all blocks at once
+	def readBlocks(self):
+
+		print ("-----------------------------------------------------")
+		print ("Parsing XML Tree searching for blocks...")
+		print ("-----------------------------------------------------")
+		listBlocks = [] 
 		blockCounter = 0
 		listBlocks.append(SimpleBlockEntry("","",""))
-		
-		for entry in all_elements:
+	
+		for entry in tree.iter():
 				
 			if(entry.tag=="{https://developers.google.com/blockly/xml}next"):
 				print ("Found <next>-attribute")
 				blockCounter += 1
 				listBlocks.append(SimpleBlockEntry("","",""))
-				print (blockCounter)
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}block"):
 				print ("Found <block>-attribute with type = " + entry.attrib.get('type') + " and 'id = " + entry.attrib.get('id'))
 				#print(entry.attrib)
-				listBlocks[blockCounter].blockName = entry.attrib.get('type')
+				listBlocks[blockCounter].blockName += (entry.attrib.get('type') + ';')
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}value"): 
 				print ("Found <value>-attribute with name = " + entry.attrib.get('name'))
 				#print(entry.attrib)
-				listBlocks[blockCounter].blockSlotName = entry.attrib.get('name')
+				listBlocks[blockCounter].blockSlotName += (entry.attrib.get('name') + ';')
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}field"):
 				print ("Found <field>-attribute with name = " + entry.attrib.get('name'))
 				#print(entry.attrib)	
-				listBlocks[blockCounter].blockSlotValue = entry.attrib.get('name')				
+				listBlocks[blockCounter].blockSlotValue += (entry.text + ';')				
 			else:
 				print("Warning: Found an XML element that is unknown and unhandled!")
-	#print(listBlocks)
-	return listBlocks
+
+		return listBlocks
 			
 			 
   
