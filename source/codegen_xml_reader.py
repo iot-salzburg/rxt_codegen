@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 import xml.etree.ElementTree as ET
-tree = ET.parse('../input/example.xml')
+tree = ET.parse('../input/example_oliver.xml')
 root = tree.getroot()
 
 #--------------------------------------------

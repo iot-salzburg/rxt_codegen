@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml xmlns="https://developers.google.com/blockly/xml">
+   <block type="set_asset" id=")jOxU71|FI??;;qC~:b(" x="193" y="125">
+      <value name="asset">
+         <block type="text" id="F!(ky.keABJt9Pn0{VAh">
+            <field name="TEXT">Panda</field>
+         </block>
+      </value>
+      <next>
+         <block type="wait_message" id="O=`VUd/H]rc8bz-8e)z+">
+            <value name="message">
+               <block type="text" id=".OWqX]Vi{Ij+mMW5MtK;">
+                  <field name="TEXT">START_PROCESS</field>
+               </block>
+            </value>
+            <next>
+               <block type="repeat_custom" id="LEGtbL=A+!zdz.*?E=2I">
+                  <value name="repeat">
+                     <block type="text" id="d0PAB!G/o*,+M9me(l?,">
+                        <field name="TEXT">X=9</field>
+                     </block>
+                  </value>
+                  <statement name="statement">
+                     <block type="fetch_object" id="pYNf%36B(XvQEYF)e_;$">
+                        <value name="object">
+                           <block type="text" id="|(T3={H*M9`J@~oEQE-o">
+                              <field name="TEXT">WaterCup</field>
+                           </block>
+                        </value>
+                        <value name="from_position">
+                           <block type="text" id="+$~+pX?Aw^b1^2qcmy+Y">
+                              <field name="TEXT">StoragePosition_X</field>
+                           </block>
+                        </value>
+                        <value name="to_position">
+                           <block type="text" id="bM+xEm#u%DaaT?EuXU.Q">
+                              <field name="TEXT">ParkingPosition</field>
+                           </block>
+                        </value>
+                        <next>
+                           <block type="send_message" id="#~moH$h12Q@(HEI9:qdO">
+                              <value name="message">
+                                 <block type="text" id="LvNM:fy]q*O9/TeA(/@z">
+                                    <field name="TEXT">START_DELIVERY</field>
+                                 </block>
+                              </value>
+                           </block>
+                        </next>
+                     </block>
+                  </statement>
+                  <next>
+                     <block type="move_position" id="rId_Y5.#5Wv-C|vAW?^9">
+                        <value name="position">
+                           <block type="text" id="|P;(#hjp`TZ?GV_oEL`$">
+                              <field name="TEXT">Idle</field>
+                           </block>
+                        </value>
+                     </block>
+                  </next>
+               </block>
+            </next>
+         </block>
+      </next>
+   </block>
+</xml>

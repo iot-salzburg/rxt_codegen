@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml xmlns="https://developers.google.com/blockly/xml">
+   <block type="set_asset" id="D-Su-XYkJj%aju7%q:AB" x="127" y="55">
+      <value name="asset">
+         <block type="text" id="a`GbRMs#d.GPJPNpksg7">
+            <field name="TEXT">QBO</field>
+         </block>
+      </value>
+      <next>
+         <block type="wait_user" id="0QZrO{J7h0ABSWr27/s]">
+            <field name="type">speech</field>
+            <value name="message">
+               <block type="text" id="T8~Dj_1g0{Rp`Tvc@%`@">
+                  <field name="TEXT">I would like to drink an apple juice!</field>
+               </block>
+            </value>
+            <next>
+               <block type="voice_output" id="{?/UG]HLQTXVFtlKa(Yq">
+                  <value name="message">
+                     <block type="text" id="F%q:B~EM;skcbG`Z|Yn{">
+                        <field name="TEXT">Okay, I will tell the other robots!</field>
+                     </block>
+                  </value>
+                  <next>
+                     <block type="send_message" id="kVGm@Xdm9w..%#xF8$/P">
+                        <value name="message">
+                           <block type="text" id="?Hk4_sJtE?1ya5}n`_DO">
+                              <field name="TEXT">START_PROCESS</field>
+                           </block>
+                        </value>
+                     </block>
+                  </next>
+               </block>
+            </next>
+         </block>
+      </next>
+   </block>
+   <block type="set_asset" id=")jOxU71|FI??;;qC~:b(" x="118" y="217">
+      <value name="asset">
+         <block type="text" id="F!(ky.keABJt9Pn0{VAh">
+            <field name="TEXT">Panda</field>
+         </block>
+      </value>
+      <next>
+         <block type="wait_message" id="O=`VUd/H]rc8bz-8e)z+">
+            <value name="message">
+               <block type="text" id=".OWqX]Vi{Ij+mMW5MtK;">
+                  <field name="TEXT">START_PROCESS</field>
+               </block>
+            </value>
+            <next>
+               <block type="fetch_object" id="pYNf%36B(XvQEYF)e_;$">
+                  <value name="object">
+                     <block type="text" id="|(T3={H*M9`J@~oEQE-o">
+                        <field name="TEXT">WaterCup</field>
+                     </block>
+                  </value>
+                  <value name="from_position">
+                     <block type="text" id="+$~+pX?Aw^b1^2qcmy+Y">
+                        <field name="TEXT">StoragePosition_5</field>
+                     </block>
+                  </value>
+                  <value name="to_position">
+                     <block type="text" id="bM+xEm#u%DaaT?EuXU.Q">
+                        <field name="TEXT">ParkingPosition_2</field>
+                     </block>
+                  </value>
+                  <next>
+                     <block type="send_message" id="#~moH$h12Q@(HEI9:qdO">
+                        <value name="message">
+                           <block type="text" id="LvNM:fy]q*O9/TeA(/@z">
+                              <field name="TEXT">START_DELIVERY</field>
+                           </block>
+                        </value>
+                     </block>
+                  </next>
+               </block>
+            </next>
+         </block>
+      </next>
+   </block>
+   <block type="set_asset" id="buwrVt7{3R=-Y=Y@@lhv" x="497" y="218">
+      <value name="asset">
+         <block type="text" id="hI35Au,4UhMd+2*U}y36">
+            <field name="TEXT">Chasi</field>
+         </block>
+      </value>
+      <next>
+         <block type="wait_message" id="!n@$lHk2lQP*OdN}V:YS">
+            <value name="message">
+               <block type="text" id="n=rC(6qJEg(UL*k(@+OB">
+                  <field name="TEXT">START_PROCESS</field>
+               </block>
+            </value>
+            <next>
+               <block type="move_position" id="A0rghDERwCyQPy{CzY@/">
+                  <value name="position">
+                     <block type="text" id="?fYro|3Rr+zhSCFt8/D-">
+                        <field name="TEXT">ParkingPosition_2</field>
+                     </block>
+                  </value>
+                  <next>
+                     <block type="wait_message" id="kd0.`j:!LNz(ExhF3gtM">
+                        <value name="message">
+                           <block type="text" id="{L,?}*mMD[cFvYdF^-2N">
+                              <field name="TEXT">START_DELIVERY</field>
+                           </block>
+                        </value>
+                        <next>
+                           <block type="move_position" id="]6px0=H4FPRl2(iHN:Fm">
+                              <value name="position">
+                                 <block type="text" id=";+~Qo![1MjG.MP{r@thW">
+                                    <field name="TEXT">PatientLocation</field>
+                                 </block>
+                              </value>
+                              <next>
+                                 <block type="wait_user" id="cfJr5A;K*qAS:A51{heq">
+                                    <field name="type">touch</field>
+                                    <value name="message">
+                                       <block type="text" id="g{bvC9g;8;:I|tGUDJU(">
+                                          <field name="TEXT">SoftBorder</field>
+                                       </block>
+                                    </value>
+                                    <next>
+                                       <block type="move_position" id="I7OO/sn-Ne_A(]`vU^Gj">
+                                          <value name="position">
+                                             <block type="text" id="vtIC7z?^Ko,AlV`F#t+V">
+                                                <field name="TEXT">ParkingPosition_2</field>
+                                             </block>
+                                          </value>
+                                       </block>
+                                    </next>
+                                 </block>
+                              </next>
+                           </block>
+                        </next>
+                     </block>
+                  </next>
+               </block>
+            </next>
+         </block>
+      </next>
+   </block>
+</xml>
