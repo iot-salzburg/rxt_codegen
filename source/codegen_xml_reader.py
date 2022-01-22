@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 import xml.etree.ElementTree as ET
-tree = ET.parse('../input/example_oliver.xml')
-root = tree.getroot()
 
 #--------------------------------------------
 # Class to hold infos of one block
@@ -19,13 +17,17 @@ class SimpleBlockEntry():
 #--------------------------------------------
 class XML_BlocklyProject_Parser():
 
+	def __init__(self, fileName):
+		self.tree = ET.parse(fileName)
+		self.root = self.tree.getroot()
+
 	# read the assets involved in the script
 	def readAssets(self):
 
 		print ("-----------------------------------------------------")
 		print ("Searching for all involved assets...")
 		print ("-----------------------------------------------------")
-		for asset in root:
+		for asset in self.root:
 			print ("Found involved Asset with following tag and attrib: ")
 			print (asset.tag, asset.attrib)
 
@@ -39,7 +41,7 @@ class XML_BlocklyProject_Parser():
 		blockCounter = 0
 		listBlocks.append(SimpleBlockEntry("","",""))
 	
-		for entry in tree.iter():
+		for entry in self.tree.iter():
 				
 			if(entry.tag=="{https://developers.google.com/blockly/xml}next"):
 				print ("Found <next>-attribute")

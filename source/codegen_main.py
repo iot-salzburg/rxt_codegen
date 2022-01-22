@@ -10,7 +10,7 @@ if __name__== "__main__":
 
 	print ("Trying to parse XML input file now...")
 	
-	xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser()
+	xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser('../input/example_oliver.xml')
 	xml_parser.readAssets()
 	listBlocks = xml_parser.readBlocks()
 	
