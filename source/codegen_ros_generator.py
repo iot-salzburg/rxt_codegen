@@ -1,35 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 import sys, string
-
-#--------------------------------------------
-# Class to create python code
-#--------------------------------------------
-class CodeGeneratorBackend:
-
-	def begin(self, tab="\t"):
-		self.code = []
-		self.tab = tab
-		self.level = 0
-
-	def end(self):
-		return "".join(self.code)
-
-	def write(self, string):
-		self.code.append(self.tab * self.level + string)
-
-	def indent(self):
-		self.level = self.level + 1
-
-	def dedent(self):
-		#if self.level == 0:
-		#    raise SyntaxError, "internal error in code generator"
-		self.level = self.level - 1
+import codegen_generator_helper
 
 #--------------------------------------------
 # Class to hold infos that should get created
 #--------------------------------------------
-class PythonGeneratorClass():
+class ROSGeneratorClass():
 
 	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
@@ -38,7 +15,7 @@ class PythonGeneratorClass():
 	def dump_self(self, filename):
 		
 		# imports and Co
-		self.c = CodeGeneratorBackend()
+		self.c = codegen_generator_helper.GeneratorHelper()
 		self.c.begin(tab="    ")
 		self.c.write('#! /usr/bin/env python\n\n')
 		self.c.write('import rospy\n')
