@@ -48,9 +48,7 @@ class ROSGeneratorClass():
 		# create all blocks read from XML
 		self.c.indent()
 		for block in self.listBlocks:
-			self.c.write(block.blockName + '\n')
-			self.c.write(block.blockSlotName + '\n')
-			self.c.write(block.blockSlotValue + '\n\n')
+			self.writeBlock(block)
 		self.c.dedent()			
 		
 		# function: main close
@@ -64,7 +62,21 @@ class ROSGeneratorClass():
 		f.write(self.c.end())
 		f.close()
 
-
+	def writeBlock(self, block):
+	
+		skillName = block.blockName
+		slotName = block.blockSlotName
+		slotValue = block.blockSlotValue
+		
+		self.c.write('# request '+ skillName +'\n')
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('print (\'INVOKING RXT_SKILL: '+ skillName +'\')\n')	
+		self.c.write('result = send_ROSActionRequest_WithGoal(\''+ skillName +'\', rxt_skills_qbo.msg.'+ skillName +'Action, rxt_skills_qbo.msg.'+ skillName +'Goal('+ slotName +'=b\''+ slotValue +'\'))\n')
+		self.c.write('if result:\n')
+		self.c.indent()
+		self.c.write('print(\"Result was: \" + str(result.isOK))\n')
+		self.c.dedent()	
+		self.c.write('print (\'----------------------------------\')\n\n')
 
 
 	
