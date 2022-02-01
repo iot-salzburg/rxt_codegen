@@ -4,6 +4,10 @@ import robXTask.rxtx_helpers as rxtx_helpers
 
 import rxta_ARTI_Sim as rxta_ARTI_Sim
 
+async def startRobXTask():
+  print("*** startRobXTask")
+  # This is the main-code - place any startup things here as needed...
+
 # sample messagehandler for message-type 'SampleMessageType' - you get a 'paho-mqtt-message' (also holds the 'robxtask'-specific topic...)
 async def on_rxte__message__FetchDrink__rxtx_helpers(messages):
     async for message in messages:
