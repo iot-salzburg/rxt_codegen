@@ -63,15 +63,16 @@ class ROSGeneratorClass():
 		f.close()
 
 	def writeBlock(self, block):
-	
-		skillName = block.blockName
-		slotName = block.blockSlotName
-		slotValue = block.blockSlotValue
+		
+		assetName = block.assetName.lower() # use lower string to allow capital letter user input on 'setAsset'
+		skillName = block.blockName[0]
+		slotName = block.blockSlotName[0]
+		slotValue = block.blockSlotValue[0]
 		
 		self.c.write('# request '+ skillName +'\n')
 		self.c.write('print (\'----------------------------------\')\n')
 		self.c.write('print (\'INVOKING RXT_SKILL: '+ skillName +'\')\n')	
-		self.c.write('result = send_ROSActionRequest_WithGoal(\''+ skillName +'\', rxt_skills_qbo.msg.'+ skillName +'Action, rxt_skills_qbo.msg.'+ skillName +'Goal('+ slotName +'=b\''+ slotValue +'\'))\n')
+		self.c.write('result = send_ROSActionRequest_WithGoal(\''+ skillName +'\', rxt_skills_' + assetName + '.msg.'+ skillName +'Action, rxt_skills_' + assetName + '.msg.'+ skillName +'Goal('+ slotName +'=b\''+ slotValue +'\'))\n')
 		self.c.write('if result:\n')
 		self.c.indent()
 		self.c.write('print(\"Result was: \" + str(result.isOK))\n')
