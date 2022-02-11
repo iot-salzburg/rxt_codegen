@@ -118,11 +118,12 @@ class ROSGeneratorClass():
 	def writeLoopBlock(self, block):
 
 		slotValue = block.blockSlotValue[0]
+		[loopVar, loopMax] = slotValue.split('=') # assume syntax always is 'X=Number'
 
 		self.c.write('print (\'----------------------------------\')\n')
-		self.c.write('print (\'Loop\')\n')
+		self.c.write('print (\'Generated Loop\')\n')
 		self.c.write('print (\'----------------------------------\')\n')
-		self.c.write('for X in range('+ slotValue +'):\n\n')
+		self.c.write('for ' + loopVar + ' in range(' + loopMax + '):\n\n')
 
 	#--------------------------------------------
 	# write a simple selection block to file
@@ -132,7 +133,7 @@ class ROSGeneratorClass():
 		slotValue = block.blockSlotValue[0]
 		
 		self.c.write('print (\'----------------------------------\')\n')
-		self.c.write('print (\'Selection\')\n')
+		self.c.write('print (\'Generated Selection\')\n')
 		self.c.write('print (\'----------------------------------\')\n')
 		self.c.write('if ' + slotValue + ':\n\n')
 	
