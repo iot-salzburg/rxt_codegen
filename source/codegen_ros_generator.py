@@ -29,7 +29,7 @@ class ROSGeneratorClass():
 
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
-			self.dump_self(filename + assetName + ".py", assetName, blocks)
+			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
