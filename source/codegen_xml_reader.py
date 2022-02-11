@@ -57,14 +57,36 @@ class XML_BlocklyProject_Parser():
 		blockCounter = 0
 		blocks = []
 		blocks.append(SimpleBlockEntry("", [],[],[]))
+		statementBlockCounter = 0
 	
 		for entry in asset.iter():
 				
-			if(entry.tag=="{https://developers.google.com/blockly/xml}next" or entry.tag=="{https://developers.google.com/blockly/xml}statement"):
+			if(entry.tag=="{https://developers.google.com/blockly/xml}next"):
 				print ("Found <next>-attribute")
+
+				# Need to count down number of blocks within Statement (Loop or Selection)
+				# Add a Stament End Tag, when counter is zero again
+				if(statementBlockCounter > 0):
+					statementBlockCounter -= 1
+					if (statementBlockCounter == 0):
+						blockCounter += 1
+						blocks.append(SimpleBlockEntry("", ["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"]))
+
+				# normally start a new block
 				blockCounter += 1
 				blocks.append(SimpleBlockEntry("", [],[],[]))
-				
+			
+			elif(entry.tag=="{https://developers.google.com/blockly/xml}statement"):
+				print ("Found <statement>-attribute")
+
+				# normally start a new block
+				blockCounter += 1
+				blocks.append(SimpleBlockEntry("", [],[],[]))
+
+				# we are starting a statement and need to find the end of Selection or Loop
+				# count (nr of "next"-children + 1) to get actual nr of subnodes of statement block
+				statementBlockCounter = len(list(entry.iter('{https://developers.google.com/blockly/xml}next'))) + 1
+
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}block"):
 				print ("Found <block>-attribute with type = " + entry.attrib.get('type') + " and 'id = " + entry.attrib.get('id'))
 				blocks[blockCounter].blockName.append(entry.attrib.get('type'))

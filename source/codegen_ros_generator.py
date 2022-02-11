@@ -69,11 +69,13 @@ class ROSGeneratorClass():
 		
 		# create all blocks read from XML
 		self.c.indent()
-		for block in blocks:
-			if block.blockName[0] == 'Loop':
+		for block in blocks:			
+			if block.blockName[0] == 'STATEMENT_ENDTAG': # end of control statement
+				self.c.dedent()	
+			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
 				self.writeLoopBlock(block)
 				self.c.indent()
-			elif block.blockName[0] == 'Selection':
+			elif block.blockName[0] == 'Selection': # begin of control statement (Selection)
 				self.writeSelectionBlock(block)
 				self.c.indent()
 			else:
