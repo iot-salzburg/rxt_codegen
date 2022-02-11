@@ -36,55 +36,54 @@ class XML_BlocklyProject_Parser():
 			print ("Found involved Asset with following tag and attrib: ")
 			print (asset.tag, asset.attrib)
 
+			blocks = self.readBlocks(asset)
+			self.listBlocks.append(blocks)
+
 
 	# read all blocks at once
-	def readBlocks(self):
+	def readBlocks(self, asset):
 
 		print ("-----------------------------------------------------")
 		print ("Parsing XML Tree searching for blocks...")
 		print ("-----------------------------------------------------")
 
 		blockCounter = 0
-		self.listBlocks.append(SimpleBlockEntry("", [],[],[]))
+		blocks = []
+		blocks.append(SimpleBlockEntry("", [],[],[]))
 	
-		for entry in self.tree.iter():
+		for entry in asset.iter():
 				
 			if(entry.tag=="{https://developers.google.com/blockly/xml}next" or entry.tag=="{https://developers.google.com/blockly/xml}statement"):
 				print ("Found <next>-attribute")
 				blockCounter += 1
-				self.listBlocks.append(SimpleBlockEntry("", [],[],[]))
+				blocks.append(SimpleBlockEntry("", [],[],[]))
 				
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}block"):
 				print ("Found <block>-attribute with type = " + entry.attrib.get('type') + " and 'id = " + entry.attrib.get('id'))
-				self.listBlocks[blockCounter].blockName.append(entry.attrib.get('type'))
+				blocks[blockCounter].blockName.append(entry.attrib.get('type'))
 					
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}value"): 
 				print ("Found <value>-attribute with name = " + entry.attrib.get('name'))
-				self.listBlocks[blockCounter].blockSlotName.append(entry.attrib.get('name'))
+				blocks[blockCounter].blockSlotName.append(entry.attrib.get('name'))
 				
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}field"):
 				print ("Found <field>-attribute with name = " + entry.attrib.get('name'))	
-				self.listBlocks[blockCounter].blockSlotValue.append(entry.text)	
+				blocks[blockCounter].blockSlotValue.append(entry.text)	
 				
 			else:
 				print("Warning: Found an XML element that is unknown and unhandled!")
 
 		# now put everything in order assigned to correct asset
-		self.assignBlocksToAssets()
+		self.assignBlocksToAssets(blocks)
+		return blocks
 			
 
 	# assign all blocks to an asset
-	def assignBlocksToAssets(self):
-	
-		#for block in self.listBlocks:
-		#	for name in block.blockName:
-		#		print(name)
-		#	print (';;')
-
+	def assignBlocksToAssets(self, blocks):
 		
 		# assign blocks
 		assetName = ""
-		for entry in self.listBlocks:
+		for entry in blocks:
 			
 			if(entry.blockName[0] == "SetAsset"):
 				assetName = entry.blockSlotValue[0]
@@ -93,10 +92,10 @@ class XML_BlocklyProject_Parser():
 			print('\nFound entry: ' + entry.assetName + '; ' + entry.blockName[0] + '; ' + entry.blockSlotValue[0])
 				
 		# remove asset blocks
-		for entry in self.listBlocks:
+		for entry in blocks:
 
 			if(entry.blockName[0] == "SetAsset"):
-				self.listBlocks.remove(entry)
+				blocks.remove(entry)
 
 			
 			

@@ -11,6 +11,11 @@ class OPCUAGeneratorClass():
 	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
 		self.listBlocks = listBlocks
+	
+	def dump_all(self, filename):
+
+		for blocks in self.listBlocks:
+			self.dump_self(filename + blocks[0].assetName.lower() + ".py", blocks)
 
 	def dump_self(self, filename):
 	

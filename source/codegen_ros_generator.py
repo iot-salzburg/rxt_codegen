@@ -12,7 +12,12 @@ class ROSGeneratorClass():
 		self.clientString = clientString
 		self.listBlocks = listBlocks
 
-	def dump_self(self, filename):
+	def dump_all(self, filename):
+
+		for blocks in self.listBlocks:
+			self.dump_self(filename + blocks[0].assetName.lower() + ".py", blocks)
+
+	def dump_self(self, filename, blocks):
 		
 		# imports and Co
 		self.c = codegen_generator_helper.GeneratorHelper()
@@ -47,7 +52,7 @@ class ROSGeneratorClass():
 		
 		# create all blocks read from XML
 		self.c.indent()
-		for block in self.listBlocks:
+		for block in blocks:
 			self.writeBlock(block)
 		self.c.dedent()			
 		
