@@ -17,12 +17,12 @@ Example "launch.json" file for debuuging with visual code / visual studio:
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Aktuelle Datei",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "./source/codegen_main.py",
             "console": "integratedTerminal",
-            "args": ["./input/example_3.xml", "./output/generated_results/", "false"]
+            "args": ["./input/example_2.xml", "./output/generated_results/", "false"]
         }
     ]
 }
