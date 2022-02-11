@@ -6,5 +6,5 @@
 For directories of files please use input folder for input files and output folder for output files. Example usage: 
 
 ```python
-python codegen_main.py ../input/example_2.xml ../output/auto_generated.py false
+python codegen_main.py ../input/example_2.xml ../output/generated_results/ false
 ```
