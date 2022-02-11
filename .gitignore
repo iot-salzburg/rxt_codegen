@@ -1,6 +1,9 @@
 # ignore generated result
 /output/auto_generated.py
 
+# vscode project files
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
