@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys, string, os
+import sys, string, os, shutil
 import codegen_generator_helper
 		
 #--------------------------------------------
@@ -13,6 +13,9 @@ class OPCUAGeneratorClass():
 		self.listBlocks = listBlocks
 	
 	def dump_all(self, filename):
+
+		if os.path.exists(os.path.dirname(filename)):
+			shutil.rmtree(os.path.dirname(filename)) # recursive remove of dir and all files
 
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()

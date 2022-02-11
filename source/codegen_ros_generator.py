@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys, string, os
+import sys, string, os, shutil
 import codegen_generator_helper
 
 #--------------------------------------------
@@ -13,6 +13,9 @@ class ROSGeneratorClass():
 		self.listBlocks = listBlocks
 
 	def dump_all(self, filename):
+
+		if os.path.exists(os.path.dirname(filename)):
+			shutil.rmtree(os.path.dirname(filename)) # recursive remove of dir and all files
 
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
@@ -54,7 +57,14 @@ class ROSGeneratorClass():
 		# create all blocks read from XML
 		self.c.indent()
 		for block in blocks:
-			self.writeBlock(block)
+			if block.blockName[0] == 'Loop':
+				self.writeLoopBlock(block)
+				self.c.indent()
+			elif block.blockName[0] == 'Selection':
+				self.writeSelectionBlock(block)
+				self.c.indent()
+			else:
+				self.writeRequestBlock(block)
 		self.c.dedent()			
 		
 		# function: main close
@@ -63,13 +73,13 @@ class ROSGeneratorClass():
 		self.c.write('print(\"program interrupted before completion\")\n')
 		self.c.dedent()	
 		
-		# write to filestream
+		# write to filestream		
 		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
 		f = open(filename,'w')
 		f.write(self.c.end())
 		f.close()
 
-	def writeBlock(self, block):
+	def writeRequestBlock(self, block):
 		
 		assetName = block.assetName.lower() # use lower string to allow capital letter user input on 'setAsset'
 		skillName = block.blockName[0]
@@ -86,5 +96,21 @@ class ROSGeneratorClass():
 		self.c.dedent()	
 		self.c.write('print (\'----------------------------------\')\n\n')
 
+	def writeLoopBlock(self, block):
 
+		slotValue = block.blockSlotValue[0]
+
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('print (\'Loop\')\n')
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('for X in range('+ slotValue +'):\n\n')
+
+	def writeSelectionBlock(self, block):
+		
+		slotValue = block.blockSlotValue[0]
+		
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('print (\'Selection\')\n')
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('if ' + slotValue + ':\n\n')
 	
