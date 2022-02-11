@@ -15,9 +15,10 @@ class OPCUAGeneratorClass():
 	def dump_all(self, filename):
 
 		for blocks in self.listBlocks:
-			self.dump_self(filename + blocks[0].assetName.lower() + ".py", blocks)
+			assetName = blocks[0].assetName.lower()
+			self.dump_self(filename + assetName + ".py", assetName, blocks)
 
-	def dump_self(self, filename):
+	def dump_self(self, filename, assetName, blocks):
 	
 		# imports and Co
 		self.c = codegen_generator_helper.GeneratorHelper()

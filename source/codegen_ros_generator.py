@@ -15,9 +15,10 @@ class ROSGeneratorClass():
 	def dump_all(self, filename):
 
 		for blocks in self.listBlocks:
-			self.dump_self(filename + blocks[0].assetName.lower() + ".py", blocks)
+			assetName = blocks[0].assetName.lower()
+			self.dump_self(filename + assetName + ".py", assetName, blocks)
 
-	def dump_self(self, filename, blocks):
+	def dump_self(self, filename, assetName, blocks):
 		
 		# imports and Co
 		self.c = codegen_generator_helper.GeneratorHelper()
@@ -26,7 +27,7 @@ class ROSGeneratorClass():
 		self.c.write('import rospy\n')
 		self.c.write('import time\n\n')
 		self.c.write('import actionlib # Brings in the SimpleActionClient\n')
-		self.c.write('import rxt_skills_qbo.msg # Brings in the messages used by the qbo actions\n\n')	
+		self.c.write('import rxt_skills_'+ assetName +'.msg # Brings in the messages used by the '+ assetName +' actions\n\n')	
 		
 		# function: send_ROSActionRequest_WithGoal
 		self.c.write('#--------------------------------------------------------------------------------------\n')

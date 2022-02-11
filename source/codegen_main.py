@@ -28,7 +28,6 @@ if __name__== "__main__":
 	# parser read blocks from XML
 	xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser(inputFileName)
 	xml_parser.readAssets()
-	#xml_parser.readBlocks()
 	
 	# check if real robot mode or simulated OPCUA mode
 	if bIsSimulEnv == 'false':
