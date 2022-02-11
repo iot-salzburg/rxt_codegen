@@ -3,7 +3,7 @@
 import xml.etree.ElementTree as ET
 
 #--------------------------------------------
-# Class to hold infos of one block
+# Helper class to hold infos of one block
 #--------------------------------------------
 class SimpleBlockEntry():	
 
@@ -16,17 +16,23 @@ class SimpleBlockEntry():
 #--------------------------------------------
 # Class to parse XML File from Blockly
 #--------------------------------------------
+# Author: SRFG, Mathias Schmoigl-Tonis
+# Project: ROBxTASK
+# Date: Q1-Q2 2022
+#--------------------------------------------
 class XML_BlocklyProject_Parser():
 
+	#--------------------------------------------
+	# CTOR: init class with variable members
+	#--------------------------------------------
 	def __init__(self, fileName):
 		self.tree = ET.parse(fileName)
 		self.root = self.tree.getroot()
 		self.listBlocks = []
-		
-	def getList(self):
-		return self.listBlocks
 
+	#--------------------------------------------
 	# read the assets involved in the script
+	#--------------------------------------------
 	def readAssets(self):
 
 		print ("-----------------------------------------------------")
@@ -39,8 +45,9 @@ class XML_BlocklyProject_Parser():
 			blocks = self.readBlocks(asset)
 			self.listBlocks.append(blocks)
 
-
+	#--------------------------------------------
 	# read all blocks at once
+	#--------------------------------------------
 	def readBlocks(self, asset):
 
 		print ("-----------------------------------------------------")
@@ -73,12 +80,12 @@ class XML_BlocklyProject_Parser():
 			else:
 				print("Warning: Found an XML element that is unknown and unhandled!")
 
-		# now put everything in order assigned to correct asset
-		self.assignBlocksToAssets(blocks)
+		self.assignBlocksToAssets(blocks) # now put everything in order assigned to correct asset
 		return blocks
 			
-
+	#--------------------------------------------
 	# assign all blocks to an asset
+	#--------------------------------------------
 	def assignBlocksToAssets(self, blocks):
 		
 		# assign blocks
@@ -97,8 +104,8 @@ class XML_BlocklyProject_Parser():
 			if(entry.blockName[0] == "SetAsset"):
 				blocks.remove(entry)
 
-			
-			
-			
-			
-  
+	#--------------------------------------------
+	# GETTER: return listBlock member variable
+	#--------------------------------------------
+	def getList(self):
+		return self.listBlocks

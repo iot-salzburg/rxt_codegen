@@ -6,12 +6,22 @@ import codegen_generator_helper
 #--------------------------------------------
 # Class to hold infos that should get created
 #--------------------------------------------
+# Author: SRFG, Mathias Schmoigl-Tonis
+# Project: ROBxTASK
+# Date: Q1-Q2 2022
+#--------------------------------------------
 class ROSGeneratorClass():
 
+	#--------------------------------------------
+	# CTOR: init class with variable members
+	#--------------------------------------------
 	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
 		self.listBlocks = listBlocks
 
+	#--------------------------------------------
+	# dump all blocks of all assets to files
+	#--------------------------------------------
 	def dump_all(self, filename):
 
 		if os.path.exists(os.path.dirname(filename)):
@@ -21,6 +31,9 @@ class ROSGeneratorClass():
 			assetName = blocks[0].assetName.lower()
 			self.dump_self(filename + assetName + ".py", assetName, blocks)
 
+	#--------------------------------------------
+	# dump all blocks of one asset to file
+	#--------------------------------------------
 	def dump_self(self, filename, assetName, blocks):
 		
 		# imports and Co
@@ -79,6 +92,9 @@ class ROSGeneratorClass():
 		f.write(self.c.end())
 		f.close()
 
+	#--------------------------------------------
+	# write a simple request block to file
+	#--------------------------------------------
 	def writeRequestBlock(self, block):
 		
 		assetName = block.assetName.lower() # use lower string to allow capital letter user input on 'setAsset'
@@ -96,6 +112,9 @@ class ROSGeneratorClass():
 		self.c.dedent()	
 		self.c.write('print (\'----------------------------------\')\n\n')
 
+	#--------------------------------------------
+	# write a simple loop block to file
+	#--------------------------------------------
 	def writeLoopBlock(self, block):
 
 		slotValue = block.blockSlotValue[0]
@@ -105,6 +124,9 @@ class ROSGeneratorClass():
 		self.c.write('print (\'----------------------------------\')\n')
 		self.c.write('for X in range('+ slotValue +'):\n\n')
 
+	#--------------------------------------------
+	# write a simple selection block to file
+	#--------------------------------------------
 	def writeSelectionBlock(self, block):
 		
 		slotValue = block.blockSlotValue[0]

@@ -8,6 +8,10 @@ import codegen_opcua_generator
 #--------------------------------------------
 # main entry point for blockly codegen
 #--------------------------------------------
+# Author: SRFG, Mathias Schmoigl-Tonis
+# Project: ROBxTASK
+# Date: Q1-Q2 2022
+#--------------------------------------------
 if __name__== "__main__":
 
 	# check for correct program inputs via command line

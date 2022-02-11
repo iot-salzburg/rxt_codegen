@@ -3,6 +3,10 @@
 #--------------------------------------------
 # Class to create python code
 #--------------------------------------------
+# Author: SRFG, Mathias Schmoigl-Tonis
+# Project: ROBxTASK
+# Date: Q1-Q2 2022
+#--------------------------------------------
 class GeneratorHelper:
 
 	def begin(self, tab="\t"):
