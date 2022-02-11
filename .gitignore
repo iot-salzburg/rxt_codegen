@@ -1,5 +1,5 @@
 # ignore generated result
-/output/auto_generated.py
+/output/generated_results/*
 
 # vscode project files
 .vscode

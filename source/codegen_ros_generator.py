@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys, string
+import sys, string, os
 import codegen_generator_helper
 
 #--------------------------------------------
@@ -63,6 +63,7 @@ class ROSGeneratorClass():
 		self.c.dedent()	
 		
 		# write to filestream
+		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
 		f = open(filename,'w')
 		f.write(self.c.end())
 		f.close()
