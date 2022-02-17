@@ -30,7 +30,8 @@ class ROSGeneratorClass():
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
 			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
-			self.createAutoRunBatchFile(filename + assetName + "_autorun.bat", assetName + "_action_client.py")
+			self.createWindowsAutoRunBatchFile(filename + assetName + "_autorun_windows.bat", assetName + "_action_client.py")
+			self.createUbuntuAutoRunBatchFile(filename + assetName + "_autorun_ubuntu.desktop", assetName + "_action_client.py", assetName)
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
@@ -143,9 +144,9 @@ class ROSGeneratorClass():
 		self.c.write('if ' + slotValue + ':\n\n')
 
 	#--------------------------------------------
-	# will create an autorun batch file for the file
+	# will create an autorun batch file for windows
 	#--------------------------------------------
-	def createAutoRunBatchFile(self, filename, scriptname):
+	def createWindowsAutoRunBatchFile(self, filename, scriptname):
 
 		self.c = codegen_generator_helper.GeneratorHelper()
 		self.c.begin(tab="    ")
@@ -161,3 +162,30 @@ class ROSGeneratorClass():
 		f.write(self.c.end())
 		f.close()
 	
+	#--------------------------------------------
+	# will create an autorun batch file for Ubuntu
+	#--------------------------------------------
+	def createUbuntuAutoRunBatchFile(self, filename, scriptname, assetname):
+
+		self.c = codegen_generator_helper.GeneratorHelper()
+		self.c.begin(tab="    ")
+		self.c.write('#!/usr/bin/env xdg-open\n')
+		self.c.write('[Desktop Entry]\n')
+		self.c.write('Version=1.0\n')
+		self.c.write('Name='+ assetname +'_autorun_ubuntu\n')
+		self.c.write('Comment=Will autostart corresponding python file\n')
+		self.c.write('Exec=python ./' + scriptname + '\n')
+		self.c.write('Icon=./' + scriptname + '\n')
+		self.c.write('Path=./\n')
+		self.c.write('Terminal=false\n')
+		self.c.write('Type=Application\n')
+		self.c.write('Categories=Utility;Application;\n')
+
+		# write to filestream		
+		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
+		f = open(filename,'w')
+		f.write(self.c.end())
+		f.close()
+
+
+
