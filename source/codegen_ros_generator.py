@@ -101,8 +101,10 @@ class ROSGeneratorClass():
 		
 		assetName = block.assetName.lower() # use lower string to allow capital letter user input on 'setAsset'
 		skillName = block.blockName[0]
-		slotName = block.blockSlotName[0]
-		slotValue = block.blockSlotValue[0]
+
+		(slotNamePos, slotValuePos) = codegen_generator_helper.GoalPositionHelper().getGoalPositionForSkill(skillName)
+		slotName = block.blockSlotName[slotNamePos]
+		slotValue = block.blockSlotValue[slotValuePos]
 		
 		self.c.write('# request '+ skillName +'\n')
 		self.c.write('print (\'----------------------------------\')\n')
