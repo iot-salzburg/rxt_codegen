@@ -171,15 +171,11 @@ class ROSGeneratorClass():
 		self.c.begin(tab="    ")
 		self.c.write('#!/usr/bin/env xdg-open\n')
 		self.c.write('[Desktop Entry]\n')
-		self.c.write('Version=1.0\n')
+		self.c.write('Version=v0.8.5\n')
 		self.c.write('Name='+ assetname +'_autorun_ubuntu\n')
-		self.c.write('Comment=Will autostart corresponding python file\n')
-		self.c.write('Exec=python ./' + scriptname + '\n')
-		self.c.write('Icon=./' + scriptname + '\n')
-		self.c.write('Path=./\n')
-		self.c.write('Terminal=false\n')
+		self.c.write('Exec=python /home/panda/ros_workspace/src/rxt_codegen/output/generated_results/' + scriptname + '\n')
+		self.c.write('Terminal=true\n')
 		self.c.write('Type=Application\n')
-		self.c.write('Categories=Utility;Application;\n')
 
 		# write to filestream		
 		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
