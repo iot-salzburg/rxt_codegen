@@ -30,6 +30,7 @@ class ROSGeneratorClass():
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
 			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
+			self.createAutoRunBatchFile(filename + assetName + "_autorun.bat")
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
@@ -140,4 +141,23 @@ class ROSGeneratorClass():
 		self.c.write('print (\'Generated Selection\')\n')
 		self.c.write('print (\'----------------------------------\')\n')
 		self.c.write('if ' + slotValue + ':\n\n')
+
+	#--------------------------------------------
+	# will create an autorun batch file for the file
+	#--------------------------------------------
+	def createAutoRunBatchFile(self, filename):
+
+		self.c = codegen_generator_helper.GeneratorHelper()
+		self.c.begin(tab="    ")
+		self.c.write('ECHO ON\n')
+		self.c.write('REM A batch script to execute a Python script\n')
+		self.c.write('SET PATH=%PATH%;C:\Python27\n')
+		self.c.write(filename + '\n')
+		self.c.write('PAUSE')
+
+		# write to filestream		
+		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
+		f = open(filename,'w')
+		f.write(self.c.end())
+		f.close()
 	
