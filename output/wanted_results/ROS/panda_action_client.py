@@ -29,7 +29,7 @@ if __name__ == '__main__':
         # request GrabObject
         print ('----------------------------------')
         print ('INVOKING RXT_SKILL: GrabObject')
-        result = send_ROSActionRequest_WithGoal('GrabObject', rxt_skills_panda.msg.GrabObjectAction, rxt_skills_panda.msg.GrabObjectGoal(objectPosition=b'1'))
+        result = send_ROSActionRequest_WithGoal('GrabObject', rxt_skills_panda.msg.GrabObjectAction, rxt_skills_panda.msg.GrabObjectGoal(objectPosition=b'3'))
         if result:
             print("Result was: " + str(result.isOK))
         print ('----------------------------------')
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         # request PutObject
         print ('----------------------------------')
         print ('INVOKING RXT_SKILL: PutObject')
-        result = send_ROSActionRequest_WithGoal('PutObject', rxt_skills_panda.msg.PutObjectAction, rxt_skills_panda.msg.PutObjectGoal(objectPosition=b'1'))
+        result = send_ROSActionRequest_WithGoal('PutObject', rxt_skills_panda.msg.PutObjectAction, rxt_skills_panda.msg.PutObjectGoal(position=b'3'))
         if result:
             print("Result was: " + str(result.isOK))
         print ('----------------------------------')
@@ -65,11 +65,11 @@ if __name__ == '__main__':
         if result:
             print("Result was: " + str(result.isOK))
         print ('----------------------------------')
-        
+
         # request MoveToLocation
         print ('----------------------------------')
         print ('INVOKING RXT_SKILL: MoveToLocation')
-        result = send_ROSActionRequest_WithGoal('MoveToLocation', rxt_skills_panda.msg.MoveToLocationAction, rxt_skills_panda.msg.MoveToLocationGoal(location=b'final cart position'))
+        result = send_ROSActionRequest_WithGoal('MoveToLocation', rxt_skills_panda.msg.MoveToLocationAction, rxt_skills_panda.msg.MoveToLocationGoal(location=b'final cart position 2'))
         if result:
             print("Result was: " + str(result.isOK))
         print ('----------------------------------')
