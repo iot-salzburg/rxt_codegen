@@ -30,7 +30,7 @@ class ROSGeneratorClass():
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
 			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
-			self.createAutoRunBatchFile(filename + assetName + "_autorun.bat")
+			self.createAutoRunBatchFile(filename + assetName + "_autorun.bat", assetName + "_action_client.py")
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
@@ -145,14 +145,14 @@ class ROSGeneratorClass():
 	#--------------------------------------------
 	# will create an autorun batch file for the file
 	#--------------------------------------------
-	def createAutoRunBatchFile(self, filename):
+	def createAutoRunBatchFile(self, filename, scriptname):
 
 		self.c = codegen_generator_helper.GeneratorHelper()
 		self.c.begin(tab="    ")
 		self.c.write('ECHO ON\n')
 		self.c.write('REM A batch script to execute a Python script\n')
 		self.c.write('SET PATH=%PATH%;C:\Python27\n')
-		self.c.write(filename + '\n')
+		self.c.write("python " + scriptname + '\n')
 		self.c.write('PAUSE')
 
 		# write to filestream		
