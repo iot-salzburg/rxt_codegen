@@ -35,12 +35,12 @@ class XML_BlocklyProject_Parser():
 	#--------------------------------------------
 	def readAssets(self):
 
-		print ("-----------------------------------------------------")
 		print ("Searching for all involved assets...")
-		print ("-----------------------------------------------------")
 		for asset in self.root:
-			print ("Found involved Asset with following tag and attrib: ")
+			print ("-----------------------------------------------------")
+			print ("Found involved Asset with following tag and attrib: ")		
 			print (asset.tag, asset.attrib)
+			print ("-----------------------------------------------------")
 
 			blocks = self.readBlocks(asset)
 			self.listBlocks.append(blocks)
@@ -50,9 +50,7 @@ class XML_BlocklyProject_Parser():
 	#--------------------------------------------
 	def readBlocks(self, asset):
 
-		print ("-----------------------------------------------------")
 		print ("Parsing XML Tree searching for blocks...")
-		print ("-----------------------------------------------------")
 
 		blockCounter = 0
 		blocks = []
@@ -118,7 +116,7 @@ class XML_BlocklyProject_Parser():
 				assetName = entry.blockSlotValue[0]
 			
 			entry.assetName = assetName
-			print('\nFound entry: ' + entry.assetName + '; ' + entry.blockName[0] + '; ' + entry.blockSlotValue[0])
+			#print('\nFound entry: ' + entry.assetName + '; ' + entry.blockName[0] + '; ' + entry.blockSlotValue[0])
 				
 		# remove asset blocks
 		for entry in blocks:
