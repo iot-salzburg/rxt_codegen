@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys, string, os, shutil
+import os, shutil
 import codegen_generator_helper
+import codegen_generator_autorun
 
 #--------------------------------------------
 # Class to hold infos that should get created
@@ -30,8 +31,10 @@ class ROSGeneratorClass():
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName.lower()
 			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
-			self.createWindowsAutoRunBatchFile(filename + assetName + "_autorun_windows.bat", assetName + "_action_client.py")
-			self.createUbuntuAutoRunBatchFile(filename + assetName + "_autorun_ubuntu.desktop", assetName + "_action_client.py", assetName)
+
+			autoRunner = codegen_generator_autorun.AutoRunGeneratorClass()
+			autoRunner.createWindowsAutoRunFile(filename + assetName + "_autorun_windows.bat", assetName + "_action_client.py")
+			autoRunner.createUbuntuAutoRunFile(filename + assetName + "_autorun_ubuntu.desktop", assetName + "_action_client.py", assetName)
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
@@ -142,46 +145,3 @@ class ROSGeneratorClass():
 		self.c.write('print (\'Generated Selection\')\n')
 		self.c.write('print (\'----------------------------------\')\n')
 		self.c.write('if ' + slotValue + ':\n\n')
-
-	#--------------------------------------------
-	# will create an autorun batch file for windows
-	#--------------------------------------------
-	def createWindowsAutoRunBatchFile(self, filename, scriptname):
-
-		self.c = codegen_generator_helper.GeneratorHelper()
-		self.c.begin(tab="    ")
-		self.c.write('ECHO ON\n')
-		self.c.write('REM A batch script to execute a Python script\n')
-		self.c.write('SET PATH=%PATH%;C:\Python27\n')
-		self.c.write("python " + scriptname + '\n')
-		self.c.write('PAUSE')
-
-		# write to filestream		
-		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
-		f = open(filename,'w')
-		f.write(self.c.end())
-		f.close()
-	
-	#--------------------------------------------
-	# will create an autorun batch file for Ubuntu
-	#--------------------------------------------
-	def createUbuntuAutoRunBatchFile(self, filename, scriptname, assetname):
-
-		self.c = codegen_generator_helper.GeneratorHelper()
-		self.c.begin(tab="    ")
-		self.c.write('#!/usr/bin/env xdg-open\n')
-		self.c.write('[Desktop Entry]\n')
-		self.c.write('Version=v0.8.5\n')
-		self.c.write('Name='+ assetname +'_autorun_ubuntu\n')
-		self.c.write('Exec=python /home/panda/ros_workspace/src/rxt_codegen/output/generated_results/' + scriptname + '\n')
-		self.c.write('Terminal=true\n')
-		self.c.write('Type=Application\n')
-
-		# write to filestream		
-		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
-		f = open(filename,'w')
-		f.write(self.c.end())
-		f.close()
-
-
-

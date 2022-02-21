@@ -2,8 +2,8 @@
 # coding=utf-8
 import sys
 import codegen_xml_reader
-import codegen_ros_generator
-import codegen_opcua_generator
+import codegen_generator_ros
+import codegen_generator_opcua
 
 #--------------------------------------------
 # main entry point for blockly codegen
@@ -35,9 +35,9 @@ if __name__== "__main__":
 	
 	# check if real robot mode or simulated OPCUA mode
 	if bIsSimulEnv == 'false':
-		ros_gen = codegen_ros_generator.ROSGeneratorClass('_client_py', xml_parser.getList())
+		ros_gen = codegen_generator_ros.ROSGeneratorClass('_client_py', xml_parser.getList())
 		ros_gen.dump_all(outputFileName)
 	else:
-		ros_gen = codegen_opcua_generator.OPCUAGeneratorClass('_client_py', xml_parser.getList())
+		ros_gen = codegen_generator_opcua.OPCUAGeneratorClass('_client_py', xml_parser.getList())
 		ros_gen.dump_all(outputFileName)
 
