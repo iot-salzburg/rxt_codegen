@@ -4,6 +4,7 @@
 - Call this program with three command line arguments: [inputFile][outputFile][bIsSimulatedEnv]
 
 For directories of files please use input folder for input files and output folder for output files. 
+
 Example usage in console for ROS file generation: 
 
 ```python
