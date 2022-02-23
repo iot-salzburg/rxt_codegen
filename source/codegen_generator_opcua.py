@@ -53,16 +53,16 @@ class OPCUAGeneratorClass():
 		for block in blocks:
 			if block.blockName[0] == 'STATEMENT_ENDTAG': # end of control statement
 				self.c.dedent()	
-			elif block.blockName[0] == 'OnMessageReceive':
-				self.write_messagelistener(block.blockSlotValue[1], block)
-			elif block.blockName[0] == 'SendMessage':
-				self.write_skillblock(block, assetName, False)
 			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
 				self.write_loopblock(block)
 				self.c.indent()
 			elif block.blockName[0] == 'Selection': # begin of control statement (Selection)
 				self.write_selectionblock(block)
 				self.c.indent()
+			elif block.blockName[0] == 'OnMessageReceive':
+				self.write_messagelistener(block.blockSlotValue[1], block)
+			elif block.blockName[0] == 'SendMessage':
+				self.write_sendmessage(block, assetName)
 			else:
 				self.write_skillblock(block, assetName, True)	
 		
@@ -174,6 +174,19 @@ class OPCUAGeneratorClass():
 			self.c.dedent()	
 
 		self.c.write('\n')
+
+	#--------------------------------------------
+	# write send message
+	#--------------------------------------------
+	def write_sendmessage(self, block, assetName):
+		
+		slotValue = block.blockSlotValue[1]
+
+		self.c.write('# ----------------------------------\n')
+		self.c.write('# Trying to send message \n')
+		self.c.write('# ----------------------------------\n')
+		self.c.write('await rxtx_helpers.sendMessage("' + slotValue + '", "Whatever")\n')
+		self.c.write('await rxtx_helpers.stop()\n\n')
 
 	#--------------------------------------------
 	# write a simple loop block to file
