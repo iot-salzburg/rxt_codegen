@@ -51,8 +51,12 @@ class OPCUAGeneratorClass():
 
 		# create all blocks read from XML
 		for block in blocks:
-			if block.blockName[0] == 'OnMessageReceive':
+			if block.blockName[0] == 'STATEMENT_ENDTAG': # end of control statement
+				self.c.dedent()	
+			elif block.blockName[0] == 'OnMessageReceive':
 				self.write_messagelistener(block.blockSlotValue[1], block)
+			elif block.blockName[0] == 'SendMessage':
+				self.write_skillblock(block, assetName, False)
 			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
 				self.write_loopblock(block)
 				self.c.indent()
@@ -60,12 +64,11 @@ class OPCUAGeneratorClass():
 				self.write_selectionblock(block)
 				self.c.indent()
 			else:
-				self.write_messagecontent(block, assetName)
-			
-			#self.c.dedent()
-			#self.c.dedent()
+				self.write_skillblock(block, assetName, True)	
 		
 		# start async
+		self.c.dedent()
+		self.c.dedent()
 		self.c.write('rxtx_helpers.startAsync()\n')
 
 		# write to filestream
@@ -108,10 +111,10 @@ class OPCUAGeneratorClass():
 		self.c.write('sMsg = str(message.payload.decode("utf-8")).strip()\n')
 		self.c.write('print("Total Workflow was Tested: " + sMsg)\n')
 		self.c.write('await rxtx_helpers.stop()\n\n')
-		self.c.dedent()	
-		self.c.dedent()	
-		
+			
 		# start async
+		self.c.dedent()	
+		self.c.dedent()
 		self.c.write('rxtx_helpers.startAsync()\n')
 
 		# write to filestream
@@ -129,16 +132,18 @@ class OPCUAGeneratorClass():
 		self.c.indent()
 		self.c.write('async for message in messages:\n\n')
 		self.c.indent()
+		self.c.write('# ----------------------------------\n')
 		self.c.write('# This is the automatically generated message execution code\n')
+		self.c.write('# ----------------------------------\n')
 		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
 		self.c.write('print("*** on_rxte__message__' + message_name + '__rxtx_helpers()")\n')
 		self.c.write('sMessage = str(message.payload.decode("utf-8")).strip()\n')
 		self.c.write('print("got Message: " + sMessage)\n\n')
 
 	#--------------------------------------------
-	# write message content to file
+	# write single skill block to file
 	#--------------------------------------------
-	def write_messagecontent(self, block, assetName):
+	def write_skillblock(self, block, assetName, skill_hasreturn):
 
 		skillName = block.blockName[0]
 
@@ -146,9 +151,29 @@ class OPCUAGeneratorClass():
 		slotName = block.blockSlotName[slotNamePos]
 		slotValue = block.blockSlotValue[slotValuePos]
 
+		self.c.write('# ----------------------------------\n')
+		self.c.write('# Trying to invoke skill: ' + skillName + '\n')
+		self.c.write('# ----------------------------------\n')
 		self.c.write('await rxtx_helpers.logSkillCall("' + skillName + '","' + slotValue + '")\n')
-		self.c.write('await rxta_' + assetName + '.' + skillName + '("' + slotValue + '")\n\n')
+		self.c.write('await rxta_' + assetName + '.' + skillName + '("' + slotValue + '")\n')
 
+		# generate skill return handling (if needed)
+		if(skill_hasreturn):
+
+			self.c.write('bResOk = await rxta_' + assetName + '.getResultBool()\n')
+			self.c.write('if (bResOk):\n')
+			self.c.indent()
+			self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.INFO,"' + skillName + ' - OK :-)")\n')
+			self.c.dedent()	
+			self.c.write('else:\n')
+			self.c.indent()
+			self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.INFO,"' + skillName + ' - NOK :-)")\n')
+			self.c.write('sErrCode = await rxta_' + assetName + '.GetData(rxta_' + assetName + '.enVariables.Status' + skillName + '_ErrorCode)\n')
+			self.c.write('sErrMsg = await rxta_' + assetName + '.GetData(rxta_' + assetName + '.enVariables.Status' + skillName + '_StatusMessage)\n')
+			self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.ERROR,"' + skillName + ' - ERROR (" + sErrCode + ") - " + sErrMsg)\n')
+			self.c.dedent()	
+
+		self.c.write('\n')
 
 	#--------------------------------------------
 	# write a simple loop block to file
