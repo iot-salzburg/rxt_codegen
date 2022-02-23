@@ -37,10 +37,10 @@ if __name__== "__main__":
 		print('Codegen called with incorrect program argument. [strInputFile] is not readable!')
 		print('Program execution will stop now...')
 		sys.exit()
-	if not os.access(outputFileName, os.W_OK): # check if outputFile is writable by system	
-		print('Codegen called with incorrect program argument. [strOutputFile] is not writable!')
-		print('Program execution will stop now...')
-		sys.exit()
+	#if not os.access(outputFileName, os.W_OK): # check if outputFile is writable by system	
+	#	print('Codegen called with incorrect program argument. [strOutputFile] is not writable!')
+	#	print('Program execution will stop now...')
+	#	sys.exit()
 
 	xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser(inputFileName)
 	xml_parser.readAssets()

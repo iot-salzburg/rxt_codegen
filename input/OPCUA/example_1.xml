@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xml xmlns="https://developers.google.com/blockly/xml">
-   <block type="SetAsset" id="s*Q:kA?20oEXOBv1u,;l" x="140" y="53">
+   <block type="SetAsset" id="s*Q:kA?20oEXOBv1u,;l" x="141" y="70">
       <value name="asset">
          <block type="Text" id="T0}x^!V.TAXdbj4O_d3Y">
-            <field name="text">01_Controller</field>
+            <field name="text">Controller</field>
          </block>
       </value>
       <next>
          <block type="SendMessage" id="hvZXG7r=0[x8V~DDh`#d">
-            <field name="messageType">OPC-UA</field>
+            <field name="messageType">MQTT</field>
             <value name="messageContent">
                <block type="Text" id="5:qWV%UZYKF^t0A}qP`0">
                   <field name="text">TestCamera</field>
@@ -25,7 +25,7 @@
       </value>
       <next>
          <block type="OnMessageReceive" id=",~2))GF^8MFpZKdw-+vc">
-            <field name="messageType">OPC-UA</field>
+            <field name="messageType">MQTT</field>
             <value name="messageContent">
                <block type="Text" id="Z._@?vQR]l0P2/1D0ml^">
                   <field name="text">TestCamera</field>
@@ -47,7 +47,7 @@
                         </value>
                         <next>
                            <block type="SendMessage" id="Kb`9n4yVo.iqchy^!,qq">
-                              <field name="messageType">OPC-UA</field>
+                              <field name="messageType">MQTT</field>
                               <value name="messageContent">
                                  <block type="Text" id="^sorG#YEPDKV*N#g2,0#">
                                     <field name="text">TestUR10</field>
@@ -70,7 +70,7 @@
       </value>
       <next>
          <block type="OnMessageReceive" id=";,9PN+%_sGPL+m|^#+zK">
-            <field name="messageType">OPC-UA</field>
+            <field name="messageType">MQTT</field>
             <value name="messageContent">
                <block type="Text" id="KgsiTz}DT9A~%?ekrsml">
                   <field name="text">TestUR10</field>
@@ -102,7 +102,7 @@
                         </value>
                         <next>
                            <block type="SendMessage" id="r7+b0tXwO]Zqm*;I=qgY">
-                              <field name="messageType">OPC-UA</field>
+                              <field name="messageType">MQTT</field>
                               <value name="messageContent">
                                  <block type="Text" id="[-gP,8VW8;@ve2Uje~5A">
                                     <field name="text">TestMIR</field>
@@ -117,7 +117,7 @@
          </block>
       </next>
    </block>
-   <block type="SetAsset" id="d*}=9TM8)_b`a5E1y[zI" x="149" y="582">
+   <block type="SetAsset" id="d*}=9TM8)_b`a5E1y[zI" x="147" y="567">
       <value name="asset">
          <block type="Text" id="-6pZzq`?vTMuv.t+z!qq">
             <field name="text">UCI2Mir</field>
@@ -125,7 +125,7 @@
       </value>
       <next>
          <block type="OnMessageReceive" id="xtu`DPk}[6[mU?N(LjUg">
-            <field name="messageType">OPC-UA</field>
+            <field name="messageType">MQTT</field>
             <value name="messageContent">
                <block type="Text" id="#1j!-8$pb(Z8@-M~|8b,">
                   <field name="text">TestMIR</field>

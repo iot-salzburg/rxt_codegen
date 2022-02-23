@@ -29,8 +29,8 @@ class ROSGeneratorClass():
 			shutil.rmtree(os.path.dirname(filename)) # recursive remove of dir and all files
 
 		for blocks in self.listBlocks:
-			assetName = blocks[0].assetName.lower()
-			self.dump_self(filename + assetName + "_action_client.py", assetName, blocks)
+			assetName = blocks[0].assetName.lower() # in case of ROS always use lower names (ROS package compatibility)
+			self.dump_asset(filename + assetName + "_action_client.py", assetName, blocks)
 
 			autoRunner = codegen_generator_autorun.AutoRunGeneratorClass()
 			autoRunner.createWindowsAutoRunFile(filename + assetName + "_autorun_windows.bat", assetName + "_action_client.py")
@@ -39,7 +39,7 @@ class ROSGeneratorClass():
 	#--------------------------------------------
 	# dump all blocks of one asset to file
 	#--------------------------------------------
-	def dump_self(self, filename, assetName, blocks):
+	def dump_asset(self, filename, assetName, blocks):
 		
 		# imports and Co
 		self.c = codegen_generator_helper.GeneratorHelper()
@@ -78,13 +78,13 @@ class ROSGeneratorClass():
 			if block.blockName[0] == 'STATEMENT_ENDTAG': # end of control statement
 				self.c.dedent()	
 			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
-				self.writeLoopBlock(block)
+				self.write_loopblock(block)
 				self.c.indent()
 			elif block.blockName[0] == 'Selection': # begin of control statement (Selection)
-				self.writeSelectionBlock(block)
+				self.write_selectionblock(block)
 				self.c.indent()
 			else:
-				self.writeRequestBlock(block)
+				self.write_requestblock(block)
 		self.c.dedent()			
 		
 		# function: main close
@@ -102,7 +102,7 @@ class ROSGeneratorClass():
 	#--------------------------------------------
 	# write a simple request block to file
 	#--------------------------------------------
-	def writeRequestBlock(self, block):
+	def write_requestblock(self, block):
 		
 		assetName = block.assetName.lower() # use lower string to allow capital letter user input on 'setAsset'
 		skillName = block.blockName[0]
@@ -124,7 +124,7 @@ class ROSGeneratorClass():
 	#--------------------------------------------
 	# write a simple loop block to file
 	#--------------------------------------------
-	def writeLoopBlock(self, block):
+	def write_loopblock(self, block):
 
 		slotValue = block.blockSlotValue[0]
 		[loopVar, loopMax] = slotValue.split('=') # assume syntax always is 'X=Number'
@@ -137,7 +137,7 @@ class ROSGeneratorClass():
 	#--------------------------------------------
 	# write a simple selection block to file
 	#--------------------------------------------
-	def writeSelectionBlock(self, block):
+	def write_selectionblock(self, block):
 		
 		slotValue = block.blockSlotValue[0]
 		

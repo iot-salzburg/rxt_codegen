@@ -28,13 +28,18 @@ class OPCUAGeneratorClass():
 			shutil.rmtree(os.path.dirname(filename)) # recursive remove of dir and all files
 
 		for blocks in self.listBlocks:
-			assetName = blocks[0].assetName.lower()
-			self.dump_self(filename + "agent_rxta_" + assetName + "_sim_01.py", assetName, blocks)
+			assetName = blocks[0].assetName
+
+			# at the moment "Controller" is needed to set starting point of application
+			if assetName == "Controller": 
+				self.dump_controller(filename + "agent_01_" + assetName + ".py", assetName, blocks)
+			else:
+				self.dump_asset(filename + "agent_rxta_" + assetName + "_01.py", assetName, blocks)
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
 	#--------------------------------------------
-	def dump_self(self, filename, assetName, blocks):
+	def dump_asset(self, filename, assetName, blocks):
 	
 		# imports and Co
 		self.c = codegen_generator_helper.GeneratorHelper()
@@ -42,56 +47,131 @@ class OPCUAGeneratorClass():
 		self.c.write('import asyncio\n')
 		self.c.write('from logging import setLogRecordFactory\n')
 		self.c.write('import robXTask.rxtx_helpers as rxtx_helpers\n\n')
-		self.c.write('import rxta_ARTI_Sim as rxta_ARTI_Sim\n\n')
+		self.c.write('import rxta_' + assetName + ' as rxta_' + assetName + '\n\n')
 
-		# main routine
-		self.c.write('async def startRobXTask():\n')
-		self.c.indent()
-		self.c.write('print("*** startRobXTask")\n')
-		self.c.write('# This is the main-code - place any startup things here as needed...\n\n')
-		self.c.dedent()	
+		# create all blocks read from XML
+		for block in blocks:
+			if block.blockName[0] == 'ONReceiveMessage':
+				self.write_messagelistener("XXX", block)
+			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
+				self.write_loopblock(block)
+				self.c.indent()
+			elif block.blockName[0] == 'Selection': # begin of control statement (Selection)
+				self.write_selectionblock(block)
+				self.c.indent()
+			else:
+				self.write_messagecontent("XXX", block)
+			
+			#self.c.dedent()
+			#self.c.dedent()
 		
-		# ---------------------------------------------------------------------------------------
-		# TODO: the following lines are not yet finished, just preview
-
-		# async call 1
-		self.c.write('async def on_rxte__message__FetchDrink__rxtx_helpers(messages):\n')
-		self.c.indent()
-		self.c.write('async for message in messages:\n')
-		self.c.indent()
-		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
-		self.c.write('print("*** on_rxte__message__FetchWater__rxtx_helpers()")\n')
-		self.c.write('sDrink = str(message.payload.decode("utf-8")).strip()\n')
-		self.c.write('print("got Message: " + sDrink)\n')
-		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Roboter)")\n')
-		self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Roboter")\n')
-		self.c.write('await rxtx_helpers.sendMessage("GrabDrink", sDrink)\n\n')
-		self.c.dedent()
-		self.c.dedent()
-
-		# async call 2
-		self.c.write('async def on_rxte__message__DrinkGrabbed__rxtx_helpers(messages):\n')
-		self.c.indent()
-		self.c.write('async for message in messages:\n')
-		self.c.indent()
-		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
-		self.c.write('print("*** on_rxte__message__DrinkGrabbed__rxtx_helpers()")\n')
-		self.c.write('sDrink = str(message.payload.decode("utf-8")).strip()\n')
-		self.c.write('print("got Message: " + sDrink)\n')
-		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Couch)")\n')
-		self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Couch")\n')
-		self.c.write('await rxtx_helpers.sendMessage("DrinkFetched", sDrink)\n\n')
-		self.c.dedent()
-		self.c.dedent()
-
 		# start async
 		self.c.write('rxtx_helpers.startAsync()\n')
-
-		# TODO : end section
-		# ---------------------------------------------------------------------------------------
 
 		# write to filestream
 		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
 		f = open(filename,'w')
 		f.write(self.c.end())
 		f.close()
+
+	#--------------------------------------------
+	# dump main controller file
+	#--------------------------------------------
+	def dump_controller(self, filename, assetName, blocks):
+
+		startMessage = blocks[0].blockSlotValue[1] # assumes Controller only uses send first message block!
+
+		# imports and Co
+		self.c = codegen_generator_helper.GeneratorHelper()
+		self.c.begin(tab="    ")
+		self.c.write('import asyncio\n')
+		self.c.write('from logging import setLogRecordFactory\n')
+		self.c.write('import robXTask.rxtx_helpers as rxtx_helpers\n\n')
+
+		# create main routine
+		self.c.write('async def startRobXTask():\n')
+		self.c.indent()
+		self.c.write('# This is the automatically generated main-code with the start message to begin workflow\n')
+		self.c.write('print("*** startRobXTask")\n')	
+		self.c.write('await rxtx_helpers.sleep(5)\n')
+		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.INFO,"agent_01_Controller - First Log")\n')
+		self.c.write('await rxtx_helpers.sendMessage("' + startMessage + '", "Part_Cube")\n\n')
+		self.c.dedent()	
+
+		# message handler for workflow end
+		self.c.write('async def on_rxte__message__WorkflowEnded__rxtx_helpers(messages):\n')
+		self.c.indent()
+		self.c.write('async for message in messages:\n')
+		self.c.indent()
+		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
+		self.c.write('print("*** on_rxte__message__Ur10Tested__rxtx_helpers()")\n')
+		self.c.write('sMsg = str(message.payload.decode("utf-8")).strip()\n')
+		self.c.write('print("Total Workflow was Tested: " + sMsg)\n')
+		self.c.write('await rxtx_helpers.stop()\n')
+		self.c.dedent()	
+		self.c.dedent()	
+		
+		# start async
+		self.c.write('rxtx_helpers.startAsync()\n')
+
+		# write to filestream
+		os.makedirs(os.path.dirname(filename), exist_ok=True) # Note: only works in Python 3.6(!)
+		f = open(filename,'w')
+		f.write(self.c.end())
+		f.close()
+	
+	#--------------------------------------------
+	# write message listener to file
+	#--------------------------------------------
+	def write_messagelistener(self, message_name, block):
+
+		self.c.write('async def on_rxte__message__'+ message_name +'__rxtx_helpers(messages):\n')
+		self.c.indent()
+		self.c.write('async for message in messages:\n')
+		self.c.indent()
+		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
+		self.c.write('print("*** on_rxte__message__' + message_name + '__rxtx_helpers()")\n')
+		self.c.write('sMessage = str(message.payload.decode("utf-8")).strip()\n')
+		self.c.write('print("got Message: " + sMessage)\n')
+
+	#--------------------------------------------
+	# write message content to file
+	#--------------------------------------------
+	def write_messagecontent(self, message_name, block):
+
+		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Roboter)")\n')
+		self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Roboter")\n')
+		self.c.write('await rxtx_helpers.sendMessage("GrabDrink", sDrink)\n\n')
+
+		#self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
+		#self.c.write('print("*** on_rxte__message__DrinkGrabbed__rxtx_helpers()")\n')
+		#self.c.write('sDrink = str(message.payload.decode("utf-8")).strip()\n')
+		#self.c.write('print("got Message: " + sDrink)\n')
+		#self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Couch)")\n')
+		#self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Couch")\n')
+		#self.c.write('await rxtx_helpers.sendMessage("DrinkFetched", sDrink)\n\n')
+
+	#--------------------------------------------
+	# write a simple loop block to file
+	#--------------------------------------------
+	def write_loopblock(self, block):
+
+		slotValue = block.blockSlotValue[0]
+		[loopVar, loopMax] = slotValue.split('=') # assume syntax always is 'X=Number'
+
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('print (\'Generated Loop\')\n')
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('for ' + loopVar + ' in range(' + loopMax + '):\n\n')
+
+	#--------------------------------------------
+	# write a simple selection block to file
+	#--------------------------------------------
+	def write_selectionblock(self, block):
+		
+		slotValue = block.blockSlotValue[0]
+		
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('print (\'Generated Selection\')\n')
+		self.c.write('print (\'----------------------------------\')\n')
+		self.c.write('if ' + slotValue + ':\n\n')
