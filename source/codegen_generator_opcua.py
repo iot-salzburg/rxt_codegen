@@ -51,8 +51,8 @@ class OPCUAGeneratorClass():
 
 		# create all blocks read from XML
 		for block in blocks:
-			if block.blockName[0] == 'ONReceiveMessage':
-				self.write_messagelistener("XXX", block)
+			if block.blockName[0] == 'OnMessageReceive':
+				self.write_messagelistener(block.blockSlotValue[1], block)
 			elif block.blockName[0] == 'Loop': # begin of control statement (Loop)
 				self.write_loopblock(block)
 				self.c.indent()
@@ -60,7 +60,7 @@ class OPCUAGeneratorClass():
 				self.write_selectionblock(block)
 				self.c.indent()
 			else:
-				self.write_messagecontent("XXX", block)
+				self.write_messagecontent(block, assetName)
 			
 			#self.c.dedent()
 			#self.c.dedent()
@@ -107,7 +107,7 @@ class OPCUAGeneratorClass():
 		self.c.write('print("*** on_rxte__message__Ur10Tested__rxtx_helpers()")\n')
 		self.c.write('sMsg = str(message.payload.decode("utf-8")).strip()\n')
 		self.c.write('print("Total Workflow was Tested: " + sMsg)\n')
-		self.c.write('await rxtx_helpers.stop()\n')
+		self.c.write('await rxtx_helpers.stop()\n\n')
 		self.c.dedent()	
 		self.c.dedent()	
 		
@@ -127,29 +127,28 @@ class OPCUAGeneratorClass():
 
 		self.c.write('async def on_rxte__message__'+ message_name +'__rxtx_helpers(messages):\n')
 		self.c.indent()
-		self.c.write('async for message in messages:\n')
+		self.c.write('async for message in messages:\n\n')
 		self.c.indent()
+		self.c.write('# This is the automatically generated message execution code\n')
 		self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
 		self.c.write('print("*** on_rxte__message__' + message_name + '__rxtx_helpers()")\n')
 		self.c.write('sMessage = str(message.payload.decode("utf-8")).strip()\n')
-		self.c.write('print("got Message: " + sMessage)\n')
+		self.c.write('print("got Message: " + sMessage)\n\n')
 
 	#--------------------------------------------
 	# write message content to file
 	#--------------------------------------------
-	def write_messagecontent(self, message_name, block):
+	def write_messagecontent(self, block, assetName):
 
-		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Roboter)")\n')
-		self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Roboter")\n')
-		self.c.write('await rxtx_helpers.sendMessage("GrabDrink", sDrink)\n\n')
+		skillName = block.blockName[0]
 
-		#self.c.write('await rxtx_helpers.logMessageReceived(message)\n')
-		#self.c.write('print("*** on_rxte__message__DrinkGrabbed__rxtx_helpers()")\n')
-		#self.c.write('sDrink = str(message.payload.decode("utf-8")).strip()\n')
-		#self.c.write('print("got Message: " + sDrink)\n')
-		#self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.BLOCKLY,"rxta_ARTI_Sim.MoveToLocationARTI(Goal_Couch)")\n')
-		#self.c.write('await rxta_ARTI_Sim.MoveToLocationARTI("Goal_Couch")\n')
-		#self.c.write('await rxtx_helpers.sendMessage("DrinkFetched", sDrink)\n\n')
+		(slotNamePos, slotValuePos) = codegen_generator_helper.GoalPositionHelper().getGoalPositionForSkill(skillName)
+		slotName = block.blockSlotName[slotNamePos]
+		slotValue = block.blockSlotValue[slotValuePos]
+
+		self.c.write('await rxtx_helpers.logSkillCall("' + skillName + '","' + slotValue + '")\n')
+		self.c.write('await rxta_' + assetName + '.' + skillName + '("' + slotValue + '")\n\n')
+
 
 	#--------------------------------------------
 	# write a simple loop block to file

@@ -51,7 +51,7 @@ class GoalPositionHelper:
 									'DeliverObject': (1,1),					# goal position (slotName, slotValue) for Skill DeliverObject
 									'FetchObject': (1,1),					# goal position (slotName, slotValue) for Skill FetchObject
 									'MeasureHydration': (1,1),				# goal position (slotName, slotValue) for Skill MeasureHydration
-									'DetectObject': (1,1),					# goal position (slotName, slotValue) for Skill DetectObject
+									'DetectObject': (0,0),					# goal position (slotName, slotValue) for Skill DetectObject
 									'GrabObject': (1,1),					# goal position (slotName, slotValue) for Skill GrabObject
 									'PutObject': (0,0),						# goal position (slotName, slotValue) for Skill PutObject
 									'TeachingWorkspacePosition': (1,1),		# goal position (slotName, slotValue) for Skill TeachingWorkspacePosition
