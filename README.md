@@ -29,7 +29,7 @@ Example "launch.json" file for debuuging with visual code / visual studio:
             "request": "launch",
             "program": "./source/codegen_main.py",
             "console": "integratedTerminal",
-            "args": ["./input/example_2.xml", "./output/generated_results/", "false"]
+            "args": ["./input/ROS/example_2.xml", "./output/generated_results/", "false"]
         }
     ]
 }
