@@ -17,7 +17,7 @@
          </block>
       </next>
    </block>
-   <block type="SetAsset" id="Z#T5Tl(M}h,r|~,M0vif" x="141" y="173">
+   <block type="SetAsset" id="Z#T5Tl(M}h,r|~,M0vif" x="141" y="170">
       <value name="asset">
          <block type="Text" id="|/cIDhzUsP!rb2tx6SkP">
             <field name="text">UCI2Ur10</field>
@@ -42,7 +42,7 @@
                      <block type="Selection" id="U2|QRhHGrw:6Y)/mnQ:[">
                         <value name="condition">
                            <block type="Text" id="2^,%e!45:1Z^1@c96{Oj">
-                              <field name="text">X=1</field>
+                              <field name="text">X==1</field>
                            </block>
                         </value>
                         <statement name="statement">
