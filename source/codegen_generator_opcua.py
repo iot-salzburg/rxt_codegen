@@ -98,7 +98,7 @@ class OPCUAGeneratorClass():
 		self.c.write('print("*** startRobXTask")\n')	
 		self.c.write('await rxtx_helpers.sleep(5)\n')
 		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.INFO,"agent_01_Controller - First Log")\n')
-		self.c.write('await rxtx_helpers.sendMessage("' + startMessage + '", "Part_Cube")\n\n')
+		self.c.write('await rxtx_helpers.sendMessage("' + startMessage + '", "Whatever")\n\n')
 		self.c.dedent()	
 
 		# message handler for workflow end
@@ -155,7 +155,15 @@ class OPCUAGeneratorClass():
 		self.c.write('# Trying to invoke skill: ' + skillName + '\n')
 		self.c.write('# ----------------------------------\n')
 		self.c.write('await rxtx_helpers.logSkillCall("' + skillName + '","' + slotValue + '")\n')
-		self.c.write('await rxta_' + assetName + '.' + skillName + '("' + slotValue + '")\n')
+
+
+		# TODO: temporary solution because only GrabObject skill on OPCUA currently needs both parameter slots
+		# should be changed once we know how real GrabObject skill on OPCUAwill be implemented
+		if skillName == 'GrabObject':
+			self.c.write('await rxta_' + assetName + '.' + skillName + '("' + block.blockSlotValue[0] + '", ' + block.blockSlotValue[1] + ')\n')
+		else:
+			self.c.write('await rxta_' + assetName + '.' + skillName + '("' + slotValue + '")\n')
+		
 
 		# generate skill return handling (if needed)
 		if(skill_hasreturn):
