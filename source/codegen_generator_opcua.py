@@ -18,6 +18,7 @@ class OPCUAGeneratorClass():
 	def __init__(self, clientString, listBlocks):
 		self.clientString = clientString
 		self.listBlocks = listBlocks
+		self.messageContent = "[Empty Message Content]"
 	
 	#--------------------------------------------
 	# dump all blocks of all assets to files
@@ -98,7 +99,7 @@ class OPCUAGeneratorClass():
 		self.c.write('print("*** startRobXTask")\n')	
 		self.c.write('await rxtx_helpers.sleep(5)\n')
 		self.c.write('await rxtx_helpers.log(rxtx_helpers.enLogType.INFO,"agent_01_Controller - First Log")\n')
-		self.c.write('await rxtx_helpers.sendMessage("' + startMessage + '", "Whatever")\n\n')
+		self.c.write('await rxtx_helpers.sendMessage("' + startMessage + '", "' + self.messageContent + '")\n\n')
 		self.c.dedent()	
 
 		# message handler for workflow end
@@ -193,7 +194,7 @@ class OPCUAGeneratorClass():
 		self.c.write('# ----------------------------------\n')
 		self.c.write('# Trying to send message \n')
 		self.c.write('# ----------------------------------\n')
-		self.c.write('await rxtx_helpers.sendMessage("' + slotValue + '", "Whatever")\n')
+		self.c.write('await rxtx_helpers.sendMessage("' + slotValue + '", "' + self.messageContent + '")\n')
 		self.c.write('await rxtx_helpers.stop()\n\n')
 
 	#--------------------------------------------
