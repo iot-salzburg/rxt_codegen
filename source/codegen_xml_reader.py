@@ -72,9 +72,11 @@ class XML_BlocklyProject_Parser():
 					if(statementBlockCounters[index] > 0):
 						statementBlockCounters[index] -= 1
 						if (statementBlockCounters[index] == 0):
-							statementBlockCounters.pop(index) # delete by index
 							blockCounter += 1
 							blocks.append(SimpleBlockEntry("", ["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"]))
+				
+				# remove all zeros from array
+				statementBlockCounters = [i for i in statementBlockCounters if i > 0]
 
 				# normally start a new block
 				blockCounter += 1
