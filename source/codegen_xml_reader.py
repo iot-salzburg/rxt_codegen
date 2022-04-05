@@ -52,23 +52,29 @@ class XML_BlocklyProject_Parser():
 
 		print ("Parsing XML Tree searching for blocks...")
 
+		# variables needed for appending blocks to block list
 		blockCounter = 0
 		blocks = []
 		blocks.append(SimpleBlockEntry("", [],[],[]))
-		statementBlockCounter = 0
+
+		# statementBlockCounters contains all statement counters, which are needed to 
+		# count down the number of blocks within Statement (Loop or Selection)
+		statementBlockCounters = [] 
 	
 		for entry in asset.iter():
 				
 			if(entry.tag=="{https://developers.google.com/blockly/xml}next"):
 				print ("Found <next>-attribute")
 
-				# Need to count down number of blocks within Statement (Loop or Selection)
-				# Add a Stament End Tag, when counter is zero again
-				if(statementBlockCounter > 0):
-					statementBlockCounter -= 1
-					if (statementBlockCounter == 0):
-						blockCounter += 1
-						blocks.append(SimpleBlockEntry("", ["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"]))
+				# Add a Stament End Tag, when any counter is zero again (reached end of a statement)
+				for index in range(len(statementBlockCounters)):
+				    
+					if(statementBlockCounters[index] > 0):
+						statementBlockCounters[index] -= 1
+						if (statementBlockCounters[index] == 0):
+							statementBlockCounters.pop(index) # delete by index
+							blockCounter += 1
+							blocks.append(SimpleBlockEntry("", ["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"],["STATEMENT_ENDTAG"]))
 
 				# normally start a new block
 				blockCounter += 1
@@ -83,7 +89,7 @@ class XML_BlocklyProject_Parser():
 
 				# we are starting a statement and need to find the end of Selection or Loop
 				# count (nr of "next"-children + 1) to get actual nr of subnodes of statement block
-				statementBlockCounter = len(list(entry.iter('{https://developers.google.com/blockly/xml}next'))) + 1
+				statementBlockCounters.append(len(list(entry.iter('{https://developers.google.com/blockly/xml}next'))) + 1)
 
 			elif(entry.tag=="{https://developers.google.com/blockly/xml}block"):
 				print ("Found <block>-attribute with type = " + entry.attrib.get('type') + " and 'id = " + entry.attrib.get('id'))
