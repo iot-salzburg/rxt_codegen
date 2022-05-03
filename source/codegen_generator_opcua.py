@@ -31,7 +31,7 @@ class OPCUAGeneratorClass():
 		# Important Note:
 		# in OPCUA environment a "Controller" is needed to set starting point of application
 		# this controller can be identified by having only one SendMessage-Command as a block
-		# there should only be one "Controller" in a script tow ork in VM env
+		# there should only be one "Controller" in a script to work in VM env
 		nrOfControllersDetected = 0
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName
