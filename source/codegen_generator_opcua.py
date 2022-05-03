@@ -28,14 +28,25 @@ class OPCUAGeneratorClass():
 		if os.path.exists(os.path.dirname(filename)):
 			shutil.rmtree(os.path.dirname(filename)) # recursive remove of dir and all files
 
+		# Important Note:
+		# in OPCUA environment a "Controller" is needed to set starting point of application
+		# this controller can be identified by having only one SendMessage-Command as a block
+		# there should only be one "Controller" in a script tow ork in VM env
+		nrOfControllersDetected = 0
 		for blocks in self.listBlocks:
 			assetName = blocks[0].assetName
-
-			# at the moment "Controller" is needed to set starting point of application
-			if assetName == "Controller": 
+		
+			if len(blocks) == 1 and blocks[0].blockName[0] == "SendMessage": # check if it has only one SendMessage-Block
 				self.dump_controller(filename + "agent_01_" + assetName + ".py", assetName, blocks)
+				nrOfControllersDetected+=1
 			else:
 				self.dump_asset(filename + "agent_rxta_" + assetName + "_01.py", assetName, blocks)
+		
+		# Important Note:
+		# If we dont have excactly one controller for the moment we only print a warning
+		# as there might be other ways to use OPCUA codegen in other local environments
+		if(nrOfControllersDetected != 1):
+			print('WARNING: Found ' + nrOfControllersDetected + ' Controllers instead of one! Your execution might not work as expected')
 
 	#--------------------------------------------
 	# dump all blocks of one asset to file
