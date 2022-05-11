@@ -25,9 +25,10 @@ class XML_BlocklyProject_Parser():
 	#--------------------------------------------
 	# CTOR: init class with variable members
 	#--------------------------------------------
-	def __init__(self, fileName):
-		self.tree = ET.parse(fileName)
-		self.root = self.tree.getroot()
+	def __init__(self, xmlString):
+		#self.tree = ET.parse(fileName)
+		#self.root = self.tree.getroot()
+		self.root = ET.fromstring(xmlString)
 		self.listBlocks = []
 
 	#--------------------------------------------

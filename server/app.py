@@ -1,6 +1,13 @@
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_from_directory, send_file
 from flask_swagger_ui import get_swaggerui_blueprint
-import os
+from glob import glob
+from io import BytesIO
+from zipfile import ZipFile
+import os, sys
+sys.path.append('/app/source')
+import codegen_xml_reader
+import codegen_generator_ros
+import codegen_generator_opcua
 
 app = Flask(__name__)
 swagger_url = '/codegen/swagger-ui.html'
@@ -23,37 +30,70 @@ def hello():
 ########################################################
 ################# register swagger ui ##################
 ########################################################
-@app.route(f"/codegen/<string:inputFileName>/<string:outputFileName>/<string:bIsSimulEnv>", methods=['POST', 'PUT'])
-def generate_executable_code(inputFileName, outputFileName, bIsSimulEnv):
-	#if not os.access(inputFileName, os.R_OK): # check if inputFile is readable by system
-	#	print('Codegen called with incorrect program argument. [strInputFile] is not readable!')
-	#	print('Program execution will stop now...')
-	#if not os.access(outputFileName, os.W_OK): # check if outputFile is writable by system	
-	#	print('Codegen called with incorrect program argument. [strOutputFile] is not writable!')
-	#	print('Program execution will stop now...')
-	#	sys.exit()
-
-	xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser(inputFileName)
-	xml_parser.readAssets()
+@app.route(f"/codegen/<string:bIsSimulEnv>", methods=['POST', 'PUT'])
+def generate_executable_code(bIsSimulEnv):
 	
-	# check if real robot mode or simulated OPCUA mode
-	# creates either ROS action clients for every found asset OR
-	# creates OPCUA agent for every found asset
-	if bIsSimulEnv == 'false':
-		ros_gen = codegen_generator_ros.ROSGeneratorClass('_client_py', xml_parser.getList())
-		ros_gen.dump_all(outputFileName)
-		print ("-----------------------------------------------------")
-		print ("Generation of ROS action client files succesfull!")
-		print ("-----------------------------------------------------")
-	elif bIsSimulEnv == 'true':
-		ros_gen = codegen_generator_opcua.OPCUAGeneratorClass('_client_py', xml_parser.getList())
-		ros_gen.dump_all(outputFileName)
-		print ("-----------------------------------------------------")
-		print ("Generation of OPCUA agent files succesfull!")
-		print ("-----------------------------------------------------")
+	content_type = request.headers.get('Content-Type')
+	if (content_type == 'application/json'):
+		# parse json string input to xml object
+		input = request.json
+		inputXmlString = input['BlocklyWorkspace']
+		xml_parser = codegen_xml_reader.XML_BlocklyProject_Parser(inputXmlString)
+		xml_parser.readAssets()
+		outputFileName = 'output/generated_results/'
+		# check if real robot mode or simulated OPCUA mode
+		# creates either ROS action clients for every found asset OR
+		# creates OPCUA agent for every found asset
+		if bIsSimulEnv == 'false':
+			ros_gen = codegen_generator_ros.ROSGeneratorClass('_client_py', xml_parser.getList())
+			ros_gen.dump_all(outputFileName)
+			stream = BytesIO()
+			with ZipFile(stream, 'w') as zf:
+				for file in glob(os.path.join(outputFileName, '*')):
+					zf.write(file, os.path.basename(file))
+			stream.seek(0)
+			return send_file(
+				stream,
+				as_attachment=True,
+				attachment_filename='ros_action_client.zip'
+			)
+			print ("-----------------------------------------------------")
+			print ("Generation of ROS action client files succesfull!")
+			print ("-----------------------------------------------------")
+		elif bIsSimulEnv == 'true':
+			ros_gen = codegen_generator_opcua.OPCUAGeneratorClass('_client_py', xml_parser.getList())
+			ros_gen.dump_all(outputFileName)
+			stream = BytesIO()
+			with ZipFile(stream, 'w') as zf:
+				for file in glob(os.path.join(outputFileName, '*')):
+					zf.write(file, os.path.basename(file))
+			stream.seek(0)
+			return send_file(
+				stream,
+				as_attachment=True,
+				attachment_filename='opcua_agent.zip'
+			)
+			print ("-----------------------------------------------------")
+			print ("Generation of OPCUA agent files succesfull!")
+			print ("-----------------------------------------------------")
+		else:
+			print('Codegen called with incorrect program argument. [bSimulEnv] is not a boolean!')
+			print('Program execution will stop now...')
 	else:
-		print('Codegen called with incorrect program argument. [bSimulEnv] is not a boolean!')
-		print('Program execution will stop now...')
+		return 'Content-Type not supported!'
+		
+@app.after_request
+def add_cors_headers(response):
+	r = request.referrer[:-1]
+	response.headers.add('Access-Control-Allow-Origin', r)
+	response.headers.add('Access-Control-Allow-Credentials', 'true')
+	response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+	response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
+	response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
+	response.headers.add('Access-Control-Allow-Headers', 'Authorization')
+	response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+	response.headers.add('Access-Control-Expose-Headers', 'Content-Disposition')
+	return response
 
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0',port=5000)
