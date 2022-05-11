@@ -27,9 +27,9 @@ Example "launch.json" file for debuuging with visual code / visual studio:
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "./source/codegen_main.py",
+            "program": "./server/source/codegen_main.py",
             "console": "integratedTerminal",
-            "args": ["./input/ROS/example_2.xml", "./output/generated_results/", "false"]
+            "args": ["./server/input/ROS/example_2.xml", "./server/output/generated_results/", "false"]
         }
     ]
 }
