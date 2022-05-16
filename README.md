@@ -3,6 +3,12 @@
 - Generates OPCUA Simulator Client for ROBxTASK simulation environment
 - Call this program with three command line arguments: [inputFile][outputFile][bIsSimulatedEnv]
 
+
+## CodeGen as a Server Implementation
+
+start with: "docker-compose -f docker-compose.yml up -d --no-deps --build"
+
+## CodeGen as a standalone application
 For directories of files please use input folder for input files and output folder for output files. 
 
 Example usage in console for ROS file generation: 
