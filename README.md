@@ -1,7 +1,7 @@
 # rxt_codegen
 - Generates Python Action Clients for ROBxTASK control from Blockly XML files
 - Generates OPCUA Simulator Client for ROBxTASK simulation environment
-- Call this program with three command line arguments: [inputFile][outputFile][bIsSimulatedEnv]
+- Call this program with three API arguments: [inputFile][outputFile][bIsSimulatedEnv]
 
 
 ## CodeGen as a Server Implementation
