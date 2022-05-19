@@ -9,8 +9,7 @@
 start with: "docker-compose -f docker-compose.yml up -d --no-deps --build"
 will be hosted under: "http://localhost:5000/codegen/swagger-ui.html"
 
-start ROBxTASK Frontend Service (Staging) next by using: "npm run start"
-(https://github.com/ROBxTASK/frontend-service)
+start ROBxTASK Frontend Service (Staging: https://github.com/ROBxTASK/frontend-service) next by using: "npm run start"
 
 
 ## CodeGen as a standalone application
