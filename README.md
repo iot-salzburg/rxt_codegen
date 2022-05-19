@@ -7,6 +7,11 @@
 ## CodeGen as a Server Implementation
 
 start with: "docker-compose -f docker-compose.yml up -d --no-deps --build"
+will be hosted under: "http://localhost:5000/codegen/swagger-ui.html"
+
+start ROBxTASK Frontend Service (Staging) next by using: "npm run start"
+(https://github.com/ROBxTASK/frontend-service)
+
 
 ## CodeGen as a standalone application
 For directories of files please use input folder for input files and output folder for output files. 
